@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de salário</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="bootstrap-4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/estilo.css">
+</head>
+
+<body>
+   
+
+    <div class="container">
+        <form method="post" action="">
+            <div class="form-group">
+                <h1 id="calc"><strong>Cálculo do Sálario</strong></h1>
+                <hr>
+            </div>
+            <div id="msg-erro" class="alert alert-danger msg">
+                <label>Preencha os campos corretamente!</label>
+            </div>
+            <div id="msg-sucesso" class="alert alert-success msg">
+                <label>Cálculo realizado com sucesso!</label>
+            </div>
+            <div class="form-group ">
+                <div>
+                    <label> <i class="fa fa-user" aria-hidden="true"></i> Nome</label>
+                    <input class="form-control" type="text" id="nome">
+                </div>
+
+                <div class="form-group">
+                    <label> <i class="fa fa-usd" aria-hidden="true"></i> Valor da hora</label>
+                    <input class="form-control" type="number" step="0.10" id="valorHora" placeholder="R$ 0.00"></input>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-usd" aria-hidden="true"></i> Horas trabalhadas</label>
+                    <input class="form-control" type="number" step="0.10" id="horasTrab" placeholder=" 0.00">
+                </div>
+
+                <div class="form group ">
+                    <label> <i class="fa fa-usd" aria-hidden="true"></i> Salário Bruto</label>
+                    <input class="form-control  " disabled type="number" step="0.10" id="salario" placeholder="R$ 0.00"
+                        readonly>
+                </div>
+
+                <div class="form-group">
+                    <label> <i class="fa fa-usd" aria-hidden="true"></i> Valor do IRRF</label>
+                    <input class="form-control  " disabled type="number" step="0.10" id="irrf" placeholder="R$ 0.00"
+                        readonly>
+                </div>
+
+                <div class="form-group">
+                    <label> <i class="fa fa-usd" aria-hidden="true"></i> Gratificação</label>
+                    <input class="form-control " disabled type="number" step="0.10" id="grat" placeholder="R$ 0.00"
+                        readonly>
+                </div>
+
+                <div class="form-group">
+                    <label> <i class="fa fa-usd" aria-hidden="true"></i> Salário Líquido</label>
+                    <input class="form-control " disabled type="number" step='0.10' id="liq" placeholder="R$ 0.00"
+                        readonly>
+                </div>
+
+                <div class="form-group">
+
+                    <button type="button" class="btn btn-primary" onclick="calcularSalario()">Calcular</button>
+                    <button type="reset" class="btn btn-danger">Limpar</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--JS-->
+    <script type="text/javascript">
+        const calcularSalario = function () {
+
+            let nome = document.getElementById('nome').value
+            let hora = document.getElementById('valorHora').value
+            let trab = document.getElementById('horasTrab').value
+
+            //Validação de dados
+            if (nome == "" || hora == "" || trab == "") {
+
+                //document.getElementById('msg-erro').style.display = "block"
+                //document.getElementById('msg-sucesso').style.display = "none"
+                $("#msg-erro").slideDown(400).delay(2000).slideUp(400)
+
+            } else {
+                let calculo = parseFloar(hora) * parseFloat(trab)
+                document.getElementById('valorHora').value = hora.toFixed(2)
+                document.getElementById('salario').value = calculo.toFixed(2)
+                // document.getElementById('msg-erro').style.display = "none"
+                //document.getElementById('msg-sucesso').style.display = "block"
+                $("#msg-sucesso").slideDown(400).delay(2000).slideUp(400)
+            }
+
+            //Cálculo do irrf
+            let salario = parseFloat(hora) * parseFloat(trab)
+            let irrf = 0
+
+            if (salario <= 1903.98) {
+                irrf = 0.00
+            } else if (salario > 1903.98 && salario <= 2826.65) {
+                irrf = salario * 0.075
+            } else if (salario > 2826.65 && salario <= 3751.05) {
+                irrf = salario * 0.150
+            } else if (salario > 3751.05 && salario <= 4664.68) {
+                irrf = salario * 0.225
+            } else {
+                irrf = salario * 0.275
+            }
+            //calculo gratificação
+            let gratificacao = 0
+            if (parseFloat(trab) > 160) {
+                gratificacao = salario * 0.015
+            }
+            //calculo salario liquido
+
+            let salarioliq = salario - irrf + gratificacao
+
+            document.getElementById('irrf').value = irrf.toFixed(2)
+            document.getElementById('grat').value = gratificacao.toFixed(2)
+            document.getElementById('irrf').value = irrf
+            document.getElementById('liq').value = salarioliq.toFixed(2)
+
+
+        }
+
+
+    </script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap-4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
