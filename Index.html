@@ -93,7 +93,8 @@
                 $("#msg-erro").slideDown(400).delay(2000).slideUp(400)
 
             } else {
-                let calculo = parseFloar(hora) * parseFloat(trab)
+                
+                let calculo = parseFloat(hora) * parseFloat(trab)
                 document.getElementById('valorHora').value = hora.toFixed(2)
                 document.getElementById('salario').value = calculo.toFixed(2)
                 // document.getElementById('msg-erro').style.display = "none"
