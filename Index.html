@@ -13,7 +13,7 @@
 </head>
 
 <body>
-   
+
 
     <div class="container">
         <form method="post" action="">
@@ -82,54 +82,45 @@
         const calcularSalario = function () {
 
             let nome = document.getElementById('nome').value
-            let hora = document.getElementById('valorHora').value
-            let trab = document.getElementById('horasTrab').value
-
-            //Validação de dados
-            if (nome == "" || hora == "" || trab == "") {
-
+            let valorhr = document.getElementById('valorHora').value
+            let qtde = document.getElementById('horasTrab').value
+            if (nome == "" || valorhr == "" || qtde == "") {
                 //document.getElementById('msg-erro').style.display = "block"
                 //document.getElementById('msg-sucesso').style.display = "none"
                 $("#msg-erro").slideDown(400).delay(2000).slideUp(400)
-
             } else {
-                
-                let calculo = parseFloat(hora) * parseFloat(trab)
-                document.getElementById('valorHora').value = hora.toFixed(2)
-                document.getElementById('salario').value = calculo.toFixed(2)
-                // document.getElementById('msg-erro').style.display = "none"
+                let salariobruto = parseFloat(valorhr) * parseFloat(qtde)
+                let irrf = 0
+                if (salariobruto <= 1903.98) {
+                    irrf = 0.00
+                } else if (salariobruto > 1903.98 && salariobruto <= 2826.65) {
+                    irrf = salariobruto * 0.075
+                } else if (salariobruto > 2826.65 && salariobruto <= 3751.05) {
+                    irrf = salariobruto * 0.15
+                } else if (salariobruto > 3751.05 && salariobruto <= 4664.68) {
+                    irrf = salariobruto * 0.225
+                } else {
+                    irrf = salariobruto * 0.275
+                }
+
+                let gratificacao = 0
+                if (parseFloat(qtde) > 160) {
+                    gratificacao = salariobruto * 0.15
+                }
+
+                let salarioliquido = salariobruto - irrf + gratificacao
+
+                document.getElementById('valorHora').value = parseFloat(valorhr).toFixed(2)
+                document.getElementById('horasTrab').value = parseFloat(qtde).toFixed(2)
+                document.getElementById('salario').value = salariobruto.toFixed(2)
+                document.getElementById('irrf').value = irrf.toFixed(2)
+                document.getElementById('grat').value = gratificacao.toFixed(2)
+                document.getElementById('liq').value = salarioliquido.toFixed(2)
+
+                //document.getElementById('msg-erro').style.display = "none"
                 //document.getElementById('msg-sucesso').style.display = "block"
                 $("#msg-sucesso").slideDown(400).delay(2000).slideUp(400)
             }
-
-            //Cálculo do irrf
-            let salario = parseFloat(hora) * parseFloat(trab)
-            let irrf = 0
-
-            if (salario <= 1903.98) {
-                irrf = 0.00
-            } else if (salario > 1903.98 && salario <= 2826.65) {
-                irrf = salario * 0.075
-            } else if (salario > 2826.65 && salario <= 3751.05) {
-                irrf = salario * 0.150
-            } else if (salario > 3751.05 && salario <= 4664.68) {
-                irrf = salario * 0.225
-            } else {
-                irrf = salario * 0.275
-            }
-            //calculo gratificação
-            let gratificacao = 0
-            if (parseFloat(trab) > 160) {
-                gratificacao = salario * 0.015
-            }
-            //calculo salario liquido
-
-            let salarioliq = salario - irrf + gratificacao
-
-            document.getElementById('irrf').value = irrf.toFixed(2)
-            document.getElementById('grat').value = gratificacao.toFixed(2)
-            document.getElementById('irrf').value = irrf
-            document.getElementById('liq').value = salarioliq.toFixed(2)
 
 
         }
